@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline'; media-src 'self' file: blob:; connect-src 'self' blob: file:;">
+  <title>Harmony Identifier</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Title Bar (for macOS hidden inset style) -->
+    <div class="title-bar">
+      <div class="drag-region"></div>
+      <h1 class="app-title">Harmony Identifier</h1>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Drop Zone -->
+      <div id="dropZone" class="drop-zone">
+        <div class="drop-zone-content">
+          <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p class="drop-text">Drop audio or video file here</p>
+          <p class="drop-subtext">or click to browse</p>
+          <p class="supported-formats">Supports: MP3, WAV, M4A, FLAC, MP4, MOV, AVI, MKV</p>
+        </div>
+        <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.flac,.ogg,.mp4,.mov,.avi,.mkv,.webm" hidden>
+      </div>
+
+      <!-- YouTube URL Input -->
+      <div id="youtubeSection" class="youtube-section">
+        <div class="youtube-divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">or paste a YouTube URL</span>
+          <span class="divider-line"></span>
+        </div>
+        <div class="youtube-input-container">
+          <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <input type="text" id="youtubeUrl" class="youtube-input" placeholder="https://www.youtube.com/watch?v=...">
+          <button id="youtubeLoadBtn" class="btn-youtube-load">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Waveform Section (hidden until file loaded) -->
+      <div id="waveformSection" class="waveform-section hidden">
+        <div class="file-info">
+          <span id="fileName" class="file-name"></span>
+          <button id="clearFile" class="btn-icon" title="Clear file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="waveform" class="waveform"></div>
+
+        <div class="controls">
+          <div class="playback-controls">
+            <button id="playPause" class="btn-primary">
+              <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <svg id="pauseIcon" class="hidden" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+              </svg>
+            </button>
+            <span id="currentTime" class="time-display">0:00</span>
+            <span class="time-separator">/</span>
+            <span id="duration" class="time-display">0:00</span>
+          </div>
+
+          <div class="segment-info">
+            <span class="segment-label">Selected:</span>
+            <span id="segmentStart" class="segment-time">0:00</span>
+            <span class="segment-separator">-</span>
+            <span id="segmentEnd" class="segment-time">0:00</span>
+          </div>
+
+          <div class="time-signature-group">
+            <label class="time-sig-label">Time:</label>
+            <select id="timeSignature" class="time-sig-select">
+              <option value="4">4/4</option>
+              <option value="3">3/4 (Waltz)</option>
+              <option value="6">6/8</option>
+              <option value="2">2/4</option>
+            </select>
+            <div class="tune-presets">
+              <button class="btn-preset" data-beats="4" data-name="Reel" title="4/4 time">Reel</button>
+              <button class="btn-preset" data-beats="6" data-name="Jig" title="6/8 time">Jig</button>
+              <button class="btn-preset" data-beats="4" data-name="Hornpipe" title="4/4 time">Hornpipe</button>
+              <button class="btn-preset" data-beats="3" data-name="Waltz" title="3/4 time">Waltz</button>
+            </div>
+          </div>
+
+          <div class="granularity-group">
+            <label class="granularity-label">Detail:</label>
+            <input type="range" id="granularitySlider" class="granularity-slider" min="1" max="5" value="3">
+            <span id="granularityValue" class="granularity-value">1 measure</span>
+          </div>
+
+          <button id="analyzeBtn" class="btn-analyze" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            Analyze Selection
+          </button>
+        </div>
+
+        <p class="hint">Click and drag on the waveform to select a segment for analysis</p>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p id="loadingText" class="loading-text">Processing...</p>
+      </div>
+
+      <!-- Results Section -->
+      <div id="resultsSection" class="results-section hidden">
+        <h2 class="results-title">Analysis Results</h2>
+
+        <div class="key-result">
+          <span class="key-label">Detected Key</span>
+          <span id="detectedKey" class="key-value">-</span>
+          <div class="confidence-bar">
+            <div id="keyConfidence" class="confidence-fill"></div>
+          </div>
+          <span id="keyConfidenceText" class="confidence-text">0% confidence</span>
+        </div>
+
+        <div class="chords-result">
+          <h3 class="chords-title">Chord Progression</h3>
+          <div id="chordTimeline" class="chord-timeline"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js"></script>
+  <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

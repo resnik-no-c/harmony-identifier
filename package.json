@@ -1,0 +1,25 @@
+{
+  "name": "harmony-identifier",
+  "version": "1.0.0",
+  "description": "Audio Harmony Identifier - Detect chords and musical keys from audio/video files",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "setup-python": "cd python && python3 -m venv venv && ./venv/bin/pip install -r requirements.txt"
+  },
+  "keywords": [
+    "audio",
+    "music",
+    "chords",
+    "key-detection",
+    "harmony"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  },
+  "dependencies": {
+    "wavesurfer.js": "^7.7.0"
+  }
+}
