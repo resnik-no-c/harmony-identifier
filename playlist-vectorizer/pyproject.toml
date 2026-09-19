@@ -1,0 +1,39 @@
+[project]
+name = "playlist-vectorizer"
+version = "0.1.0"
+description = "Vectorize a Spotify playlist into a shared feature space and compute its centroid, medoid, and dispersion."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "spotipy>=2.24.0",
+    "musicbrainzngs>=0.7.1",
+    "pylast>=5.3.0",
+    "requests>=2.31.0",
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+    "scikit-learn>=1.4.0",
+    "pandas>=2.1.0",
+    "pyarrow>=15.0.0",
+    "librosa>=0.10.0",
+    "soundfile>=0.12.0",
+    "python-dotenv>=1.0.0",
+    "click>=8.1.0",
+    "tqdm>=4.66.0",
+    "mutagen>=1.47.0",
+]
+
+[project.optional-dependencies]
+essentia = ["essentia-tensorflow"]
+embeddings = ["laion-clap", "transformers", "torch"]
+viz = ["umap-learn>=0.5.5", "matplotlib>=3.8.0"]
+cluster = ["hdbscan>=0.8.33"]
+dev = ["pytest>=8.0.0"]
+
+[project.scripts]
+pv = "pv.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

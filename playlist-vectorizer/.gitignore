@@ -1,0 +1,14 @@
+.env
+data/*
+!data/.gitkeep
+*.parquet
+*.mp3
+*.wav
+*.pb
+__pycache__/
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
